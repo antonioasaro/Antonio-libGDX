@@ -103,9 +103,10 @@ public class AntonioGdxGame extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 	    dropletImage.dispose();
-	      bucketImage.dispose();
-	      rainMusic.dispose();
-	      batch.dispose();
+	    bucketImage.dispose();
+	    dropSound.dispose();
+	    rainMusic.dispose();
+	    batch.dispose();
 	}
 
 	@Override
