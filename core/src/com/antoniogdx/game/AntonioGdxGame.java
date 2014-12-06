@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.audio.Sound;
 
 public class AntonioGdxGame extends ApplicationAdapter {
@@ -15,6 +17,7 @@ public class AntonioGdxGame extends ApplicationAdapter {
 	private Texture dropletImage;
 	private Texture bucketImage;
 	private Music rainMusic;
+	private Rectangle bucket;
 	
 	@Override
 	public void create () {
@@ -24,8 +27,14 @@ public class AntonioGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		dropletImage = new Texture("droplet.png");
 		bucketImage = new Texture("bucket.png");
-		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 		
+        bucket = new Rectangle();
+	    bucket.x = 800 / 2 - 64 / 2;
+	    bucket.y = 20;
+	    bucket.width = 64;
+	    bucket.height = 64;
+		
+		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 		rainMusic.setLooping(true);
 		rainMusic.play();
 	}
@@ -37,10 +46,21 @@ public class AntonioGdxGame extends ApplicationAdapter {
 		
 		camera.update();
 		
+	    batch.setProjectionMatrix(camera.combined);		
 		batch.begin();
-		batch.draw(dropletImage, 200, 200);
-		batch.draw(bucketImage, 0, 0);
+		batch.draw(bucketImage, bucket.x, bucket.y);
+		batch.draw(dropletImage, 400, 400);
 		batch.end();
+		
+	    if(Gdx.input.isTouched()) {
+	        Vector3 touchPos = new Vector3();
+	        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+	        camera.unproject(touchPos);
+	        bucket.x = touchPos.x - 64 / 2;
+	     }
+	     if(bucket.x < 0) bucket.x = 0;
+	     if(bucket.x > 800 - 64) bucket.x = 800 - 64;
+
 	}
 	
 	   @Override
